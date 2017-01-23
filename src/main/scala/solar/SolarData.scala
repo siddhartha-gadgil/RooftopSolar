@@ -1,6 +1,6 @@
 package solar
 
-case class SolarData(area: Double,  consumption: Double = 500, tariff : Double = 7){
+case class SolarData(area: Double,  consumption: Double = 200, tariff : Double = 7.08){
   import SolarData._
 
   val capacity = area / 100 // area in square feet
@@ -13,11 +13,11 @@ case class SolarData(area: Double,  consumption: Double = 500, tariff : Double =
 
   val revenue = math.max(surplus * tariff, 0) // ruppees in a month
 
-  val savings = math.min(generated, consumption) * billPerUnit
+  val savings = bill(consumption) - bill(math.max(consumption - generated, 0))
 
   val gains = savings + revenue
 
-  lazy val roi = gains * 12 / cost * 100
+  lazy val paybackPeriod = cost / gains
 }
 
 object SolarData{
@@ -25,7 +25,21 @@ object SolarData{
 
   val billPerUnit : Double = 3
 
-  val efficiency: Double = 4.5 * 30
+  val efficiency: Double = 4.0 * 30
+
+  import math._
+
+  def bill(units: Double) = {
+    val lowestUnits = math.min(units, 30)
+
+    val middleUnits = math.min(units - lowestUnits, 70)
+
+    val highUnits = math.min(units - lowestUnits - middleUnits, 100)
+
+    val topUnits = max(units - 200, 0)
+
+    (3 * lowestUnits) + (4.4 * middleUnits) + (5.9 * highUnits) + (6.9 * topUnits)
+  }
 
 }
 
