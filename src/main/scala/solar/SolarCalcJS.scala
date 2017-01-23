@@ -28,6 +28,20 @@ object SolarCalcJS extends JSApp {
 
     var data = SolarData(0)
 
+    var cfls = 0
+
+    var bulbs = 0
+
+    val ledSpan = span(`class` := "pull-right bg-info")("0").render
+
+    def ledUpdate() = {
+      ledSpan.textContent = Led.savings(bulbs, cfls).toString()
+    }
+
+    val cflsBox = input(`class` := "pull-right")(`type`:= "text", size := "3", value := 0).render
+
+    val bulbsBox = input(`class` := "pull-right")(`type`:= "text", size := "3", value := 0).render
+
     import scalatags.JsDom.implicits._
 
     val areaBox = input(`class` := "pull-right")(`type`:= "text", size := "5").render
@@ -66,15 +80,27 @@ object SolarCalcJS extends JSApp {
     ).render
 
     val roofTopDiv =
-      div(`class` := "col-md-6")(
-        h2("Rooftop Solar"),
+      div(`class` := "col-md-4")(
+        h4("Rooftop Solar"),
       inpDiv, resDiv).render
 
     val ledDiv =
-      div(`class` := "col-md-6")(
-        h2("LED lighting"))
+      div(`class` := "col-md-4")(
+        h4("LED lighting"),
+        table(`class` := "table table-striped")(
+          caption("Lights in your home"),
+          tbody(
+          tr(td("Number of bulbs: "), td(bulbsBox)),
+          tr(td("Number of CFLs "), td(cflsBox))
+        )),
+        table(`class` := "table table-striped")(
+          caption("Savings from switching to LEDs"),
+          tbody(
+          tr(td("Savings: "), td(ledSpan))
+        ))
+      )
 
-    val viewDiv = div(`class` := "row")(roofTopDiv, ledDiv).render
+    val viewDiv = div(`class` := "row")(roofTopDiv, div(`class` := "col-md-2").render, ledDiv).render
 
     jsDiv.appendChild(viewDiv)
 
@@ -108,11 +134,16 @@ object SolarCalcJS extends JSApp {
           showResult()
         }
 
+    cflsBox.onchange =
+      (event : dom.Event) => {
+        cfls = cflsBox.value.toInt
+        ledUpdate()
+      }
 
-    // effBox.onchange =
-    //     (event : dom.Event) => {
-    //       data = data.copy(efficiency = areaBox.value.toDouble)
-    //       showResult()
-    //     }
+    bulbsBox.onchange =
+      (event : dom.Event) => {
+        bulbs = bulbsBox.value.toInt
+        ledUpdate()
+      }
 
 }
