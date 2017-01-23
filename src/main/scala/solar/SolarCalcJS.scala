@@ -37,7 +37,7 @@ object SolarCalcJS extends JSApp {
     // val effBox = input(`type`:= "text", size := "5", value := 135).render
 
     val inpDiv =
-      div(`class`:= "col-md-4")(
+      div(`class`:= "col-md-6")(
         div(),
         h3("Enter the data below"),
         table(`class` := "table")(

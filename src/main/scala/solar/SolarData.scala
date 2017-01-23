@@ -28,3 +28,7 @@ object SolarData{
   val efficiency: Double = 4.5 * 30
 
 }
+
+object Led{
+  def savings(bulbs: Int, cfls: Int) = (3930 * bulbs) + (14330 * cfls)
+}
