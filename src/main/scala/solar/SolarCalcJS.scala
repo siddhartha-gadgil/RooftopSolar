@@ -30,19 +30,19 @@ object SolarCalcJS extends JSApp {
 
     import scalatags.JsDom.implicits._
 
-    val areaBox = input(`type`:= "text", size := "5").render
+    val areaBox = input(`class` := "pull-right")(`type`:= "text", size := "5").render
 
-    val consBox = input(`type`:= "text", size := "5", value := 500).render
+    val consBox = input(`class` := "pull-right")(`type`:= "text", size := "5", value := 500).render
 
     // val effBox = input(`type`:= "text", size := "5", value := 135).render
 
     val inpDiv =
-      div(`class`:= "col-md-6")(
+      div(
         div(),
-        h3("Enter the data below"),
-        table(`class` := "table")(
+        table(`class` := "table table-striped")(
+          caption("Household data"),
           tbody(
-          tr(td("House area (in square feet): "), td(areaBox)),
+          tr(td("Roof area (in square feet): "), td(areaBox)),
           tr(td("Monthly consumption (in units): "), td(consBox))
           // tr(td("Efficiency (standard is 135): "), td(effBox))
         )
@@ -51,9 +51,9 @@ object SolarCalcJS extends JSApp {
         // div("Efficiency:", span(" "), effBox, span(" (standard: 135)"))
       ).render
 
-    val resDiv = div(`class` := "col-md-6")(
-      h3("Results"),
-      table(`class` := "table")(
+    val resDiv = div(
+      table(`class` := "table table-striped")(
+        caption("Your gains if you install Rooftop Solar"),
       tbody(
         tr(td(span("Revenue (per month): ")), td("")),
         tr(td(span("Savings (per month): ")), td("")),
@@ -65,7 +65,16 @@ object SolarCalcJS extends JSApp {
 
     ).render
 
-    val viewDiv = div(`class` := "row")(inpDiv, resDiv).render
+    val roofTopDiv =
+      div(`class` := "col-md-6")(
+        h2("Rooftop Solar"),
+      inpDiv, resDiv).render
+
+    val ledDiv =
+      div(`class` := "col-md-6")(
+        h2("LED lighting"))
+
+    val viewDiv = div(`class` := "row")(roofTopDiv, ledDiv).render
 
     jsDiv.appendChild(viewDiv)
 
@@ -73,15 +82,14 @@ object SolarCalcJS extends JSApp {
       resDiv.innerHTML = ""
       resDiv.appendChild(
         div(
-          div(),
-          h3("Results"),
-          table(`class` := "table")(
+          table(`class` := "table table-striped")(
+            caption("Your gains if you install Rooftop Solar"),
           tbody(
-            tr(td(span("Revenue (per month): ")), td(span(`class`:= "bg-info")(s"${data.revenue}"))),
-            tr(td(span("Savings (per month): ")), td(span(`class`:= "bg-info")(s"${data.savings}"))),
-            tr(td(span("Total gains (per month): ")), td(span(`class`:= "bg-info")(s"${data.gains}"))),
-            tr(td(span("Cost: ")), td(span(`class`:= "bg-info")(s"${data.cost}"))),
-            tr(td(span("Return on Investment: ")), td(span(`class`:= "bg-info")(s"${data.roi}")))
+            tr(td(span("Revenue (per month): ")), td(span(`class`:= "pull-right bg-info")(s"${data.revenue}"))),
+            tr(td(span("Savings (per month): ")), td(span(`class`:= "pull-right bg-info")(s"${data.savings}"))),
+            tr(td(span("Total gains (per month): ")), td(span(`class`:= "pull-right bg-info")(s"${data.gains}"))),
+            tr(td(span("Cost: ")), td(span(`class`:= "pull-right bg-info")(s"${data.cost}"))),
+            tr(td(span("Return on Investment: ")), td(span(`class`:= "pull-right bg-info")(f"${data.roi}%2.1f"+"%")))
           )
         )
         ).render
