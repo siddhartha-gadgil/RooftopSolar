@@ -137,6 +137,7 @@ object SolarCalcJS extends JSApp {
         )
       ),
         table(`class` := "table table-bordered")(
+          caption("Your choices"),
           tbody(
             tr(
               td("Will you install rooftop solar?"),
