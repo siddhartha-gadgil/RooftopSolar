@@ -38,6 +38,31 @@ object SolarCalcJS extends JSApp {
       ledSpan.textContent = Led.savings(bulbs, cfls).toString()
     }
 
+    import dom.window.localStorage
+
+    case class QnBtn(qn: String, cls: String, txt: String){
+      val btn = input(`class` := s"btn btn-${cls}")(`type`:="button", value := txt).render
+
+      val key = s"qn-$txt-$qn"
+
+      btn.onclick =
+        (e: dom.Event) => {
+          val present = scala.util.Try(localStorage.getItem(key).toInt).getOrElse(0)
+          localStorage.setItem(key, (present + 1).toString)
+        }
+
+      btn.ondblclick =
+        (e: dom.Event) =>
+          {
+            val present = scala.util.Try(localStorage.getItem(key).toInt).getOrElse(0)
+          localStorage.setItem(key, (present - 2).toString)
+
+          dom.window.alert(s"$key:" + localStorage.getItem(key))
+
+        }
+    }
+
+
     val cflsBox = input(`class` := "pull-right")(`type`:= "text", size := "3", value := 0).render
 
     val bulbsBox = input(`class` := "pull-right")(`type`:= "text", size := "3", value := 0).render
@@ -109,7 +134,32 @@ object SolarCalcJS extends JSApp {
           caption("Savings from switching to LEDs"),
           tbody(
           tr(td("Total savings over 20 years: "), td(ledSpan, "Rs"))
-        ))
+        )
+      ),
+        table(`class` := "table table-bordered")(
+          tbody(
+            tr(
+              td("Will you install rooftop solar?"),
+              td(
+                QnBtn("solar", "success", "yes").btn,
+                span(" "),
+                QnBtn("solar", "warning", "maybe").btn,
+                span(" "),
+                QnBtn("solar", "danger", "no").btn
+              )
+              ),
+            tr(td("Will you switch to LEDs?"),
+            td(
+              QnBtn("led", "success", "yes").btn,
+              span(" "),
+              QnBtn("led", "warning", "maybe").btn,
+              span(" "),
+              QnBtn("led", "danger", "no").btn
+            )
+          )
+          )
+        )
+
       )
 
     val viewDiv = div(`class` := "row")(roofTopDiv, ledDiv).render
