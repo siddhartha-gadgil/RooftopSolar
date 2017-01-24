@@ -40,6 +40,8 @@ object SolarCalcJS extends JSApp {
 
     import dom.window.localStorage
 
+    val thnks = span(`class` := "text-primary")("\u00a0").render
+
     case class QnBtn(qn: String, cls: String, txt: String){
       val btn = input(`class` := s"btn btn-${cls}")(`type`:="button", value := txt).render
 
@@ -49,6 +51,10 @@ object SolarCalcJS extends JSApp {
         (e: dom.Event) => {
           val present = scala.util.Try(localStorage.getItem(key).toInt).getOrElse(0)
           localStorage.setItem(key, (present + 1).toString)
+          thnks.textContent += "Thanks!"
+          import scala.scalajs.js.timers._
+
+          setTimeout(2000){thnks.textContent="\u00a0"}
         }
 
       btn.ondblclick =
@@ -61,6 +67,7 @@ object SolarCalcJS extends JSApp {
 
         }
     }
+
 
 
     val cflsBox = input(`class` := "pull-right")(`type`:= "text", size := "3", value := 0).render
@@ -137,7 +144,7 @@ object SolarCalcJS extends JSApp {
         )
       ),
         table(`class` := "table table-bordered")(
-          caption("Your choices"),
+          // caption("Your choices"),
           tbody(
             tr(
               td("Will you install rooftop solar?"),
@@ -157,7 +164,8 @@ object SolarCalcJS extends JSApp {
               span(" "),
               QnBtn("led", "danger", "no").btn
             )
-          )
+          ),
+          tr(td(thnks))
           )
         )
 
